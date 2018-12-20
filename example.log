@@ -1,0 +1,4 @@
+INFO : 2018/12/19 17:27:15.922145 main.go:25: I'm about to do something!
+INFO : 2018/12/19 17:27:21.645013 main.go:25: I'm about to do something!
+INFO : 2018/12/19 17:28:17.364728 main.go:31: This will log to the log file and the system log
+INFO : 2018/12/19 17:28:17.364885 main.go:33: This is the same as using loggerOne

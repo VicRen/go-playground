@@ -15,8 +15,8 @@ func TestA_add(t *testing.T) {
 	tearDownTestA := setupTestA(t)
 	defer  tearDownTestA(t)
 
-	ret := a.add(3, 4)
-	if ret != 7 {
+	ret := a.add(4, 4)
+	if ret != 8 {
 		t.Fatalf("expected result %d; got %d", 7, ret)
 	}
 }

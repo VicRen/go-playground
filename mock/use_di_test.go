@@ -62,6 +62,7 @@ func TestDiB_SomeMethod3(t *testing.T) {
 		expectedErr error
 	}{
 		{"No Error", 8, "8", nil},
+		{"No Error", 9, "9", nil},
 		{"Error", 8, "", errors.New("error occur")},
 	}
 

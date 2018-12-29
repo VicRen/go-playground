@@ -1,0 +1,9 @@
+cache:
+  enable: false
+  list: [redis, mongoDB]
+mysql:
+  user: root
+  password: root
+  host: 10.11.22.33
+  port: 8080
+  name: sh01

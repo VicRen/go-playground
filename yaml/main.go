@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
+	"os"
 )
 
 type TestYAML struct {
@@ -49,4 +50,25 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	s, err := readFile()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(s)
+}
+
+// readFile returns the file name, or error when error occur.
+func readFile() (s string, err error) {
+	file, cErr := os.Open("./yaml/test.yaml")
+	if cErr != nil {
+		return "", cErr
+	}
+	defer func() {
+		if cErr := file.Close(); cErr != nil && err == nil {
+			err = cErr
+		}
+	}()
+	return file.Name(), nil
 }

@@ -1,4 +1,4 @@
-package channel
+package main
 
 type WG struct {
 	main    chan func()

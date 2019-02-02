@@ -11,7 +11,6 @@ func main() {
 	passV(*parrot)
 	fmt.Printf("调用后原始的Bird:\t\t %+v, \t\t内存地址:%p\n", parrot, &parrot)
 
-
 	fmt.Printf("原始的vb:\t\t %+v, \t\t内存地址:%p\n", vb, &vb)
 	vb2 := getBird()
 	fmt.Printf("原始的vb2:\t\t %+v, \t\t内存地址:%p\n", vb2, &vb2)
@@ -28,11 +27,21 @@ type Bird struct {
 }
 
 func passV(b Bird) {
-	b.Age ++
+	b.Age++
 	b.Name = "Great" + b.Name
 	fmt.Printf("传入修改后的Bird:\t %+v, \t内存地址:%p\n", b, &b)
 }
 
 func getBird() *Bird {
 	return vb
+}
+
+func tryPointerIntoSlice() {
+	p := &Bird{Age: 1}
+	var sl []*Bird
+	for i := 0; i < 10; i++ {
+		sl = append(sl, p)
+	}
+	p.Age = 2
+	fmt.Println(sl)
 }

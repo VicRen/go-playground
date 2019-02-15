@@ -3,7 +3,9 @@ package main
 import (
 	"io"
 	"log"
+	"net"
 	"strconv"
+)
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)

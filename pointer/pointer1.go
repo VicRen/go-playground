@@ -5,8 +5,14 @@ import "fmt"
 var vb *Bird
 
 func main() {
-	parrot := &Bird{1, "Blue"}
-	vb = &Bird{2, "Red"}
+	parrot := &Bird{1, "Blue", nil}
+	for _, v := range parrot.Slice {
+		fmt.Println(v)
+	}
+	vb = &Bird{2, "Red", []string{"nose", "mouth"}}
+	for _, v := range vb.Slice {
+		fmt.Println(v)
+	}
 	fmt.Printf("原始的Bird:\t\t %+v, \t\t内存地址:%p\n", parrot, &parrot)
 	passV(*parrot)
 	fmt.Printf("调用后原始的Bird:\t\t %+v, \t\t内存地址:%p\n", parrot, &parrot)
@@ -22,8 +28,9 @@ func main() {
 }
 
 type Bird struct {
-	Age  int
-	Name string
+	Age   int
+	Name  string
+	Slice []string
 }
 
 func passV(b Bird) {

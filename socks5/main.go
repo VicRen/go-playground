@@ -9,7 +9,7 @@ import (
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	l, err := net.Listen("tcp", ":8081")
+	l, err := net.Listen("tcp", ":10080")
 	if err != nil {
 		log.Panic(err)
 	}
@@ -25,6 +25,7 @@ func main() {
 }
 
 func handleClientRequest(client net.Conn) {
+	log.Println("handle client request")
 	if client == nil {
 		return
 	}

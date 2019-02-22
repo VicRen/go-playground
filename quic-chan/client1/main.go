@@ -19,6 +19,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	err = clientMain()
+	if err != nil {
+		panic(err)
+	}
 }
 
 func clientMain() error {

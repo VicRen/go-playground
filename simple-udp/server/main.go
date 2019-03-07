@@ -6,8 +6,8 @@ import (
 	"net"
 )
 
-var host = flag.String("host", "", "host")
-var port = flag.String("port", "8081", "port")
+var host = flag.String("host", "0.0.0.0", "host")
+var port = flag.String("port", "6062", "port")
 
 func main() {
 	flag.Parse()
@@ -21,6 +21,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println("Server listening on: ", addr)
 
 	defer conn.Close()
 

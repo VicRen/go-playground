@@ -29,6 +29,7 @@ func sendData(addr string) {
 	defer conn.Close()
 
 	_, err = conn.Write([]byte("Hello Galaxy"))
+	fmt.Printf("Client send msg to %s from %s\n", conn.RemoteAddr(), conn.LocalAddr())
 	if err != nil {
 		fmt.Println("Client failed to write UDP msg: ", err.Error())
 		return

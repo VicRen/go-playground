@@ -4,9 +4,26 @@ import (
 	"fmt"
 	"math"
 	"sync"
+	"time"
 )
 
 func main() {
+	n1()
+	n2()
+}
+
+func n1() {
+	t := time.Now()
+	n := naturals(10)
+	f := intToFloat64(square(n))
+	for x := range squareRoot(f) {
+		fmt.Println(x)
+	}
+	fmt.Println(time.Since(t))
+}
+
+func n2() {
+	t := time.Now()
 	n := naturals(10)
 	f := intToFloat64(square(n))
 	s1 := squareRoot(f)
@@ -16,6 +33,7 @@ func main() {
 	for x := range out {
 		fmt.Println(x)
 	}
+	fmt.Println(time.Since(t))
 }
 
 func naturals(count int) <-chan int {

@@ -30,11 +30,11 @@ func serverMain() error {
 		return err
 	}
 	listener, err := quic.ListenAddr(route.Server1, generateTLSConfig(), nil)
+	fmt.Println("Listening on", route.Server1)
 	sess, err := listener.Accept()
 	if err != nil {
 		return err
 	}
-	fmt.Println("Listening on", route.Server1)
 	for {
 		stream, err := sess.AcceptStream()
 		if err != nil {
@@ -50,7 +50,7 @@ func serverMain() error {
 				}
 				streamOut.Write(buf[:n])
 				fmt.Printf("Server: Got '%s' from Stream '%d'\n", string(buf[:n]), stream.StreamID())
-				if count == 2 {
+				if count == 5 {
 					fmt.Println("Server end receive")
 					sess.Close()
 					count = 0

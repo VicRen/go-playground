@@ -14,22 +14,26 @@ func main() {
 	flag.Parse()
 
 	addr := net.JoinHostPort(*host, *port)
-	for {
-		time.Sleep(time.Second)
-		sendData(addr)
-	}
-}
-
-func sendData(addr string) {
-	conn, err := net.Dial("udp", addr)
+	toAddr, err := net.ResolveUDPAddr("udp", addr)
 	if err != nil {
 		panic(err)
 	}
+	conn := newUDPConn()
+	count := 0
+	for {
+		if count > 5 {
+			conn.Close()
+			conn = newUDPConn()
+		}
+		time.Sleep(time.Second)
+		sendData(conn, toAddr)
+		count++
+	}
+}
 
-	defer conn.Close()
-
-	_, err = conn.Write([]byte("Hello Galaxy"))
-	fmt.Printf("Client send msg to %s from %s\n", conn.RemoteAddr(), conn.LocalAddr())
+func sendData(conn *net.UDPConn, addr net.Addr) {
+	_, err := conn.WriteTo([]byte("Hello Galaxy"), addr)
+	fmt.Printf("Client send msg to %v from %v\n", addr, conn.LocalAddr())
 	if err != nil {
 		fmt.Println("Client failed to write UDP msg: ", err.Error())
 		return
@@ -42,4 +46,17 @@ func sendData(addr string) {
 	}
 
 	fmt.Printf("Client Get \"%s\"\n", string(data[:n]))
+}
+
+func newUDPConn() *net.UDPConn {
+	udpAddr, err := net.ResolveUDPAddr("udp", "")
+	if err != nil {
+		panic(err)
+	}
+	conn, err := net.ListenUDP("udp", udpAddr)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("listening on addr:", conn.LocalAddr())
+	return conn
 }

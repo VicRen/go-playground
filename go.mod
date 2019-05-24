@@ -3,6 +3,7 @@ module github.com/VicRen/go-play-ground
 require (
 	github.com/bifurcation/mint v0.0.0-20181105071958-a14404e9a861 // indirect
 	github.com/cheekybits/genny v1.0.0 // indirect
+	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/golang/mock v1.2.0
 	github.com/google/logger v0.0.0-20181112113803-324a7c096a0d
 	github.com/google/wire v0.2.0

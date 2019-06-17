@@ -1,104 +1,121 @@
 package main
 
 import (
+	"crypto/rand"
+	"crypto/rsa"
+	"crypto/tls"
+	"crypto/x509"
+	"encoding/pem"
+	"errors"
 	"fmt"
+	"io"
 	"log"
-	"net"
-	"os"
-	"os/signal"
-	"sync"
-	"syscall"
+	"math/big"
 	"time"
+
+	quic "github.com/lucas-clemente/quic-go"
 )
 
-type Service struct {
-	ch chan struct{}
-	waitGroup *sync.WaitGroup
-}
+const addr = "localhost:4242"
 
-func NewService() *Service {
-	s := &Service{
-		make(chan struct{}),
-		&sync.WaitGroup{},
-	}
-	s.waitGroup.Add(1)
-	return s
-}
-
-func (s *Service) Serve(listener *net.TCPListener) {
-	defer s.waitGroup.Done()
-	for {
-		select {
-		case <-s.ch:
-			log.Println("stopping listening on", listener.Addr())
-			err := listener.Close()
-			if err != nil {
-				fmt.Println(err)
-			}
-			return
-		default:
-		}
-		err := listener.SetDeadline(time.Now().Add(1e9))
-		if err != nil {
-			fmt.Println(err)
-		}
-		conn, err := listener.AcceptTCP()
-		if err != nil {
-			if opErr, ok := err.(*net.OpError); ok && opErr.Timeout() {
-				continue
-			}
-			fmt.Println(err)
-		}
-		log.Println(conn.RemoteAddr(), "connected")
-		s.waitGroup.Add(1)
-		go s.serve(conn)
-	}
-}
-
-func (s *Service) Stop() {
-	close(s.ch)
-	s.waitGroup.Wait()
-}
-
-func (s *Service) serve(conn *net.TCPConn) {
-	defer conn.Close()
-	defer s.waitGroup.Done()
-	for {
-		select {
-		case <-s.ch:
-			log.Println("disconnecting", conn.RemoteAddr())
-			return
-		default:
-		}
-		conn.SetDeadline(time.Now().Add(1e9))
-		buf := make([]byte, 4096)
-		if _, err := conn.Read(buf); err != nil {
-			if opErr, ok := err.(*net.OpError); ok && opErr.Timeout() {
-				continue
-			}
-			log.Println(err)
-			return
-		}
-		if _, err := conn.Write(buf); err != nil {
-			log.Println(err)
-			return
-		}
-	}
-}
+const message = "foobar"
 
 func main() {
-	laddr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:48879")
+	go func() { log.Println(echoServer()) }()
+
+	err := clientMain()
 	if err != nil {
 		log.Println(err)
 	}
-	listener, err := net.ListenTCP("tcp", laddr)
+}
 
-	service:=NewService()
-	go service.Serve(listener)
+// Start a server that echos all data on the first stream opened by the client
+func echoServer() error {
+	listener, err := quic.ListenAddr(addr, generateTLSConfig(), nil)
+	if err != nil {
+		return err
+	}
+	sess, err := listener.Accept()
+	if err != nil {
+		return err
+	}
+	stream, err := sess.AcceptStream()
+	if err != nil {
+		panic(err)
+	}
+	// Echo through the loggingWriter
+	n, err := io.Copy(&loggingWriter{Writer: stream}, stream)
+	fmt.Println("Sever: end of copy:", n)
+	stream.Close()
+	return err
+}
 
-	ch := make(chan os.Signal)
-	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
-	log.Println(<-ch)
+func clientMain() error {
+	session, err := quic.DialAddr(addr, &tls.Config{InsecureSkipVerify: true}, nil)
+	if err != nil {
+		return err
+	}
 
-	service.Stop()
+	stream, err := session.OpenStreamSync()
+	if err != nil {
+		return err
+	}
+
+	log.Printf("Client: Sending '%s'\n", message)
+	go func() {
+		for {
+			_, err = stream.Write([]byte(message))
+			if err != nil {
+				fmt.Println("Client: error writing stream:", err)
+			}
+			fmt.Println("Client: data sent")
+			time.Sleep(1 * time.Millisecond)
+		}
+	}()
+
+	for {
+		buf := make([]byte, len(message))
+		_, err = io.ReadFull(stream, buf)
+		if err != nil {
+			fmt.Println("Client: reading", err)
+			return err
+		}
+		fmt.Printf("Client: Got '%s'\n", buf)
+	}
+}
+
+// A wrapper for io.Writer that also logs the message.
+type loggingWriter struct {
+	io.Writer
+	counter int
+}
+
+func (w *loggingWriter) Write(b []byte) (int, error) {
+	w.counter++
+	if w.counter == 10 {
+		return 0, errors.New("full")
+	}
+	fmt.Printf("Server: Got '%s'\n", string(b))
+	return w.Writer.Write(b)
+}
+
+// Setup a bare-bones TLS config for the server
+func generateTLSConfig() *tls.Config {
+	key, err := rsa.GenerateKey(rand.Reader, 1024)
+	if err != nil {
+		panic(err)
+	}
+	template := x509.Certificate{SerialNumber: big.NewInt(1)}
+	certDER, err := x509.CreateCertificate(rand.Reader, &template, &template, &key.PublicKey, key)
+	if err != nil {
+		panic(err)
+	}
+	keyPEM := pem.EncodeToMemory(&pem.Block{Type: "RSA PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(key)})
+	certPEM := pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: certDER})
+
+	tlsCert, err := tls.X509KeyPair(certPEM, keyPEM)
+	if err != nil {
+		panic(err)
+	}
+	return &tls.Config{Certificates: []tls.Certificate{tlsCert}}
 }

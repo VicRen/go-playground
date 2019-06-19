@@ -13,33 +13,27 @@ func main() {
 	go func() {
 		for {
 			time.Sleep(1 * time.Second)
-
-			q.Dispose()
 			fmt.Println("putting")
 			err := q.Put(20)
+			err = q.Put(20)
 			if err != nil {
 				fmt.Println("exiting putting")
 			}
 		}
 	}()
 
-	i, err := q.Get(2)
+	i, err := q.Get(1)
 	if err != nil {
 		fmt.Println("err Get", err)
 		return
 	}
 	fmt.Println("Get from queue", i)
-
-	err = q.Put(20)
-	if err != nil {
-		fmt.Println("err Put", err)
-		return
-	}
-
 	q.Dispose()
-	err = q.Put(20)
+
+	i, err = q.Get(1)
 	if err != nil {
-		fmt.Println("err Put", err)
+		fmt.Println("err Get", err, i)
 		return
 	}
+	fmt.Println("Get from queue", i)
 }

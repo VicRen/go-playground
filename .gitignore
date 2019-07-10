@@ -10,3 +10,10 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+udp-bi-transfer/client/client
+udp-bi-transfer/client/recored.txt
+udp-bi-transfer/server/recored.txt
+udp-bi-transfer/server/server
+echo/udp/udp
+simple-udp/client/client
+uuid-reader/uuid-reader

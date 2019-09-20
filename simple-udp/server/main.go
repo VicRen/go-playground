@@ -43,4 +43,5 @@ func handleClient(conn *net.UDPConn) {
 	if err != nil {
 		fmt.Println("Server failed to write UDP msg:", err.Error())
 	}
+	fmt.Printf("Server Send \"%s\"\n", string(data[:n]))
 }

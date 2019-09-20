@@ -7,34 +7,35 @@ import (
 )
 
 func main() {
-	go func() {
-		log.Fatal(echoServer())
-	}()
+	//go func() {
+	//	log.Fatal(echoServer())
+	//}()
 
 	log.Fatal(client())
 }
 
 func client() error {
-	c, e := net.Dial("udp", "192.168.101.47:6060")
+	c, e := net.Dial("udp", "39.96.21.158:6060")
 	if e != nil {
 		return e
 	}
 
-	_, err := c.Write([]byte{0x00})
+	_, err := c.Write([]byte("testing"))
 	if err != nil {
 		return err
 	}
 	fmt.Printf("client send: %v->%v\n", c.LocalAddr(), c.RemoteAddr())
 
-	var b [65535]byte
-	n, err := c.Read(b[:])
-	if err != nil {
-		fmt.Println("client read:", err)
-		return err
+	for {
+		var b [65535]byte
+		n, err := c.Read(b[:])
+		if err != nil {
+			fmt.Println("client read:", err)
+			return err
+		}
+		d := b[:n]
+		fmt.Printf("client recv: %v->%v: %v\n", c.RemoteAddr(), c.LocalAddr(), d)
 	}
-	d := b[:n]
-	fmt.Printf("client recv: %v->%v: %v\n", c.RemoteAddr(), c.LocalAddr(), d)
-	return nil
 }
 
 func echoServer() error {

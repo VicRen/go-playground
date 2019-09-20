@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-var host = flag.String("host", "47.101.180.117", "host")
+var host = flag.String("host", "39.96.21.158", "host")
 var port = flag.String("port", "6062", "port")
 
 func main() {
@@ -26,7 +26,7 @@ func main() {
 			conn.Close()
 			conn = newUDPConn()
 		}
-		time.Sleep(time.Second)
+		time.Sleep(1 * time.Second)
 		sendData(conn, toAddr, count)
 		count++
 	}
@@ -43,7 +43,7 @@ func sendData(conn *net.UDPConn, addr net.Addr, count int) {
 	go recvData(conn, ch)
 
 	select {
-	case <-time.After(1 * time.Second):
+	case <-time.After(5 * time.Second):
 		fmt.Println("read timeout")
 	case d := <-ch:
 		fmt.Printf("Client Get \"%s\"\n", string(d))

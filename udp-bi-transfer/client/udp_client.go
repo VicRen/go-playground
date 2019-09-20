@@ -13,11 +13,11 @@ const (
 	intervalTimeout = 1
 )
 
-var host = flag.String("host", "0.0.0.0", "host")
+var host = flag.String("host", "39.96.21.158", "host")
 var port = flag.String("port", "8221", "port")
 var mode = flag.String("mode", "1024", "mode")
 var rate = flag.Int("rate", 1000, "rate")
-var num = flag.Int("n", 100, "numbers of sending")
+var num = flag.Int("n", 3000, "numbers of sending")
 
 func main() {
 	flag.Parse()
@@ -59,7 +59,7 @@ func main() {
 
 			n, err = conn.Read(buf)
 			if err != nil {
-				//fmt.Println("Client failed to read UDP msg: ", err.Error())
+				fmt.Println("Client failed to read UDP msg: ", err.Error())
 				ch <- struct{}{}
 				return
 			}

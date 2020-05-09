@@ -39,7 +39,7 @@ func client() error {
 }
 
 func echoServer() error {
-	c, e := net.ListenUDP("udp", &net.UDPAddr{Port: 6060})
+	c, e := net.ListenUDP("udp", &net.UDPAddr{Port: 10999})
 	if e != nil {
 		return e
 	}
@@ -61,6 +61,16 @@ func echoServer() error {
 		if err != nil {
 			return err
 		}
-		fmt.Printf("server send: %v->%v: %v\n", c.LocalAddr(), addr, d)
+		fmt.Printf("1server send: %v->%v: %v\n", c.LocalAddr(), addr, d)
+
+		pc, err := net.DialUDP("udp", nil, addr.(*net.UDPAddr))
+		if err != nil {
+			return err
+		}
+		_, err = pc.WriteTo(d, addr)
+		if err != nil {
+			return err
+		}
+		fmt.Printf("2server send: %v->%v: %v\n", pc.LocalAddr(), addr, d)
 	}
 }

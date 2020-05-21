@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package person;
+
+import "google/protobuf/timestamp.proto";
+import "proto/phone/phone.proto";
+
+option go_package = "github.com/VicRen/go-playground/proto/person;person";
+
+message Person {
+    string name = 1;
+    int32 id = 2;  // Unique ID number for this person.
+    string email = 3;
+
+    repeated phone.PhoneNumber phones = 4;
+
+    google.protobuf.Timestamp last_updated = 5;
+}
+
+// Our address book file is just one of these.
+message AddressBook {
+    repeated Person people = 1;
+}

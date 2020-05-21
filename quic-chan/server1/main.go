@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"math/big"
 
-	quic_chan "github.com/VicRen/go-play-ground/quic-chan"
+	quic_chan "github.com/VicRen/go-playground/quic-chan"
 
 	quic "github.com/lucas-clemente/quic-go"
 )

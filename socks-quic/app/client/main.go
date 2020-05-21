@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/VicRen/go-play-ground/socks-quic/socks"
-	"github.com/VicRen/go-play-ground/socks-quic/transport/internet/quic"
+	"github.com/VicRen/go-playground/socks-quic/socks"
+	"github.com/VicRen/go-playground/socks-quic/transport/internet/quic"
 )
 
 var quicDialer = func(ctx context.Context, network, addr string) (net.Conn, error) {

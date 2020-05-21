@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"time"
 
-	addr "github.com/VicRen/go-play-ground/addr-util"
+	addr "github.com/VicRen/go-playground/addr-util"
 )
 
 func main() {

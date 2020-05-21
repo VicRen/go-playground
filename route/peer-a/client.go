@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/VicRen/go-play-ground/route"
+	"github.com/VicRen/go-playground/route"
 
 	quic "github.com/lucas-clemente/quic-go"
 )

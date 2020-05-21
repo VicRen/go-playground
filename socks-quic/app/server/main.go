@@ -9,9 +9,9 @@ import (
 	"net"
 	"time"
 
-	"github.com/VicRen/go-play-ground/socks-quic/socks"
-	"github.com/VicRen/go-play-ground/socks-quic/transport/internet"
-	"github.com/VicRen/go-play-ground/socks-quic/transport/internet/quic"
+	"github.com/VicRen/go-playground/socks-quic/socks"
+	"github.com/VicRen/go-playground/socks-quic/transport/internet"
+	"github.com/VicRen/go-playground/socks-quic/transport/internet/quic"
 )
 
 var host = flag.String("host", "0.0.0.0", "host")

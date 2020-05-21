@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/VicRen/go-play-ground/queue"
+	"github.com/VicRen/go-playground/queue"
 )
 
 func main() {

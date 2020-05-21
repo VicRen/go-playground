@@ -2,8 +2,9 @@ package mock
 
 import (
 	"errors"
-	"github.com/VicRen/go-play-ground/mock/mock_gen"
 	"testing"
+
+	mock_mock "github.com/VicRen/go-playground/mock/mock_gen"
 
 	"github.com/golang/mock/gomock"
 )
@@ -57,7 +58,7 @@ func TestDiB_SomeMethod2(t *testing.T) {
 func TestDiB_SomeMethod3(t *testing.T) {
 	tt := []struct {
 		name        string
-		outOfA int
+		outOfA      int
 		expectedRet string
 		expectedErr error
 	}{

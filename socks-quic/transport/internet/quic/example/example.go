@@ -6,8 +6,8 @@ import (
 	"io"
 	"net"
 
-	"github.com/VicRen/go-play-ground/socks-quic/transport/internet"
-	"github.com/VicRen/go-play-ground/socks-quic/transport/internet/quic"
+	"github.com/VicRen/go-playground/socks-quic/transport/internet"
+	"github.com/VicRen/go-playground/socks-quic/transport/internet/quic"
 )
 
 func main() {

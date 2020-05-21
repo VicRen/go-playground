@@ -12,8 +12,8 @@ import (
 
 	"time"
 
-	"github.com/VicRen/go-play-ground/socks-quic/common/signal/done"
-	"github.com/VicRen/go-play-ground/socks-quic/transport/internet"
+	"github.com/VicRen/go-playground/socks-quic/common/signal/done"
+	"github.com/VicRen/go-playground/socks-quic/transport/internet"
 	quic "github.com/lucas-clemente/quic-go"
 )
 

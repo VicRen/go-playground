@@ -17,3 +17,9 @@ udp-bi-transfer/server/server
 echo/udp/udp
 simple-udp/client/client
 uuid-reader/uuid-reader
+udp/dialer/dialer
+udp/client/client
+socks-quic/app/server/server
+echo/udp/server/server
+echo/udp/client/client
+echo/tcp/client/client

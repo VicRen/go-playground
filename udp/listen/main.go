@@ -1,66 +1,40 @@
 package main
 
 import (
-	"log"
+	"flag"
+	"fmt"
 	"net"
-	"time"
+)
+
+var (
+	l = flag.String("l", "", "addr listening on")
 )
 
 func main() {
-	udpAddr, err := net.ResolveUDPAddr("udp", ":8080")
+	flag.Parse()
+	if *l == "" {
+		panic("parse listen addr")
+	}
+
+	udpAddr, err := net.ResolveUDPAddr("udp", *l)
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println("listening on", udpAddr)
+
 	conn, err := net.ListenUDP("udp", udpAddr)
 	if err != nil {
 		panic(err)
 	}
-	defer func() {
-		conn.Close()
-		log.Println("closing listen")
-	}()
 
-	data := byte(0x00)
-	go func() {
-		for {
-			time.Sleep(1 * time.Second)
-			conn, err := net.Dial("udp", ":8080")
-			if err != nil {
-				panic(err)
-			}
-			log.Println("writing data")
-			conn.Write([]byte{data})
-			conn.Close()
-			data++
-		}
-	}()
+	defer conn.Close()
 
-	count := 1
+	buf := make([]byte, 1024)
 	for {
-		buf := make([]byte, 1024)
-		n, src, err := conn.ReadFrom(buf)
+		n, addr, err := conn.ReadFrom(buf)
 		if err != nil {
 			panic(err)
 		}
-		log.Println("data read:", n, src, buf[:n], conn.RemoteAddr())
-		if count == 3 {
-			break
-		}
-		count++
+		fmt.Printf("reading data from [%v]: %v\n", addr, buf[:n])
 	}
-	time.Sleep(3 * time.Second)
-	count = 1
-	for {
-		buf := make([]byte, 1024)
-		n, src, err := conn.ReadFrom(buf)
-		if err != nil {
-			panic(err)
-		}
-		log.Println("data read2:", n, src, buf[:n], conn.RemoteAddr())
-		if count == 3 {
-			break
-		}
-		count++
-	}
-	time.Sleep(3 * time.Second)
 }

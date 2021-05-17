@@ -37,5 +37,10 @@ func main() {
 		}
 
 		logger.Printf("<%s> %s", remoteAddr, data[:n])
+
+		_, err = listener.WriteTo(data[:n], remoteAddr)
+		if err != nil {
+			logger.Fatalf("error during write: %s", err)
+		}
 	}
 }

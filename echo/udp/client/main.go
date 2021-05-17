@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	host  = flag.String("host", "47.102.45.160", "host to connect")
+	host  = flag.String("host", "39.96.21.158", "host to connect")
 	port  = flag.Int("port", 10999, "port to connect")
 	port2 = flag.Int("port2", 10998, "port to connect")
 )
